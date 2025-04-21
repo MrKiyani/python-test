@@ -6,25 +6,29 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+
     steps:
+      # 1. Check out your repo
       - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      # 2. Set up Python
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      # 3. Install dependencies
+      - name: Install psutil & PyInstaller
         run: |
           python -m pip install --upgrade pip
           pip install psutil pyinstaller
 
-      - name: Build EXE
-        run: |
-          pyinstaller --onefile scripts\mt4_watcher.py
+      # 4. Build the EXE
+      - name: Build mt4_watcher.exe
+        run: pyinstaller --onefile scripts/mt4_watcher.py
 
-      - name: Upload artifact
+      # 5. Upload the built EXE as an artifact
+      - name: Upload mt4_watcher.exe
         uses: actions/upload-artifact@v3
         with:
           name: mt4_watcher-exe
-          path: dist\mt4_watcher.exe
+          path: dist/mt4_watcher.exe
